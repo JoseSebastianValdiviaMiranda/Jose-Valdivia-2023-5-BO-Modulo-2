@@ -45,7 +45,7 @@ class Game:
 
     def draw_background(self):
         image = pygame.transform.scale(BG, (SCREEN_WIDTH, SCREEN_HEIGHT))
-        image_height = image.get_height()
+        image_height = image.get_height()        
         self.screen.blit(image, (self.x_pos_bg, self.y_pos_bg))
         self.screen.blit(image, (self.x_pos_bg, self.y_pos_bg - image_height))
         if self.y_pos_bg >= SCREEN_HEIGHT:
