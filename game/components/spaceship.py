@@ -19,14 +19,12 @@ class SpaceShip(Sprite):
     
     def update(self, user_input):
         if(user_input[pygame.K_LEFT]):
-            if(self.rect.left > 0):
-                self.rect.x -= self.SHIP_SPEED
-            else:
+            self.rect.x -= self.SHIP_SPEED
+            if(self.rect.left < 0):                            
                 self.rect.right = SCREEN_WIDTH
         elif(user_input[pygame.K_RIGHT]):
-            if(self.rect.right < SCREEN_WIDTH):
-                self.rect.x += self.SHIP_SPEED
-            else:
+            self.rect.x += self.SHIP_SPEED
+            if(self.rect.right >= SCREEN_WIDTH):
                 self.rect.left = 0
         elif(user_input[pygame.K_UP]):
             if(self.rect.top > (SCREEN_HEIGHT//2)):
