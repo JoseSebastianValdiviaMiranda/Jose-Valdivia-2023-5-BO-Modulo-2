@@ -7,6 +7,7 @@ from game.utils.constants import SPACESHIP, SCREEN_HEIGHT, SCREEN_WIDTH
 class SpaceShip(Sprite):
     SPACESHIP_WIDTH = 40
     SPACESHIP_HEIGHT = 60
+    SHIP_SPEED = 10
     X_POS = (SCREEN_WIDTH//2) -SPACESHIP_WIDTH//2
     Y_POS = 500
 
@@ -19,20 +20,20 @@ class SpaceShip(Sprite):
     def update(self, user_input):
         if(user_input[pygame.K_LEFT]):
             if(self.rect.left > 0):
-                self.rect.x -= 10
+                self.rect.x -= self.SHIP_SPEED
             else:
                 self.rect.right = SCREEN_WIDTH
         elif(user_input[pygame.K_RIGHT]):
             if(self.rect.right < SCREEN_WIDTH):
-                self.rect.x += 10
+                self.rect.x += self.SHIP_SPEED
             else:
                 self.rect.left = 0
         elif(user_input[pygame.K_UP]):
             if(self.rect.top > (SCREEN_HEIGHT//2)):
-                self.rect.y -= 10
+                self.rect.y -= self.SHIP_SPEED
         elif(user_input[pygame.K_DOWN]):
             if(self.rect.bottom < SCREEN_HEIGHT):
-                self.rect.y += 10
+                self.rect.y += self.SHIP_SPEED
 
     def draw(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y))
