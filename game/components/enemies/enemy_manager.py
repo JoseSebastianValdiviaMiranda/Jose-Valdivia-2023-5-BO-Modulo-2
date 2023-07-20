@@ -12,7 +12,7 @@ class EnemyManager():
         for enemy in self.enemies:            
             enemy.update(game)            
             if enemy.rect.y >= SCREEN_HEIGHT:
-                self.enemies.remove(enemy)                               
+                self.enemies.remove(enemy)                           
 
     def draw(self, screen):
         for enemy in self.enemies:
