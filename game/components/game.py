@@ -20,11 +20,12 @@ class Game:
         self.y_pos_bg = 0
         self.player = SpaceShip()
         self.enemy_manager = EnemyManager()
-        self.bullet_manager = BulletManager()  
+        self.bullet_manager = BulletManager()
         self.running = False
         self.menu = Menu('Press any key to start...', self.screen)
         self.death_count = 0
         self.score = 0
+        self.highest_score = 0
 
     def execute(self):
         self.running = True
@@ -32,18 +33,19 @@ class Game:
             if not self.playing:
                 self.show_menu()
         pygame.display.quit()
-        pygame.quit()
+        pygame.quit()      
 
     def run(self):
         # Game loop: events - update - draw
         self.score = 0
         self.enemy_manager.reset()
-        self.playing = True
+        self.bullet_manager.reset_bullet()
+        self.playing = True                               
         while self.playing:
             self.events()
             self.update()
-            self.draw()
-
+            self.draw()        
+        
     def events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -76,23 +78,28 @@ class Game:
             self.y_pos_bg = 0
         self.y_pos_bg += self.game_speed
 
-    def show_menu(self):
+    def show_menu(self):        
         self.menu.reset_screen_color(self.screen)
         half_screen_height = SCREEN_HEIGHT // 2
         half_screen_width = SCREEN_WIDTH // 2
-
         if self.death_count == 0:
             self.menu.draw(self.screen)
-        else:
-            self.menu.update_message('New message')
-            self.menu.draw(self.screen)            
+        else:            
+            game_over = "Game over. Press any key to start"
+            score = "Your score: " + str(self.score)
+            highest_score = "Highest score: " + str(self.highest_score)
+            total_deaths = "Total deaths: " + str(self.death_count)
+            self.menu.update_message(game_over, score, highest_score, total_deaths)            
+            self.menu.draw(self.screen)
         
         icon = self.image = pygame.transform.scale(ICON, (80, 120))
         self.screen.blit(icon, (half_screen_width - 50, half_screen_height - 150))
         self.menu.update(self)
     
     def update_score(self):
-        self.score += 1
+        self.score += 10
+        if (self.score > self.highest_score):
+            self.highest_score = self.score
 
     def draw_score(self):
         font = pygame.font.Font(FONT_STYLE, 30)

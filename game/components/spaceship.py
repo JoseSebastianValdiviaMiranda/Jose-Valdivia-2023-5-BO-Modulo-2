@@ -34,10 +34,10 @@ class SpaceShip(Sprite):
                 self.rect.y -= self.SHIP_SPEED
         elif(user_input[pygame.K_DOWN]):
             if(self.rect.bottom < SCREEN_HEIGHT):
-                self.rect.y += self.SHIP_SPEED
+                self.rect.y += self.SHIP_SPEED        
         elif(user_input[pygame.K_SPACE]):
             self.shoot_player(game)
-
+        
     def draw(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y))
     
