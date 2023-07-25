@@ -1,16 +1,20 @@
 import pygame
 from game.components.bullets.bullet_manager import BulletManager
-from game.components.enemies.enemy_manager import EnemyManager
+from game.components.enemies.enemy_manager import EnemyManagers
+
+
+from game.components.hearth.heart import Hearts
 from game.components.menu import Menu
 from game.components.power_ups.power_up_manager import PowerUpManager
+from game.components.sounds_game.sounds_manager import SoundsManager
 
-
-from game.utils.constants import BG, FONT_STYLE, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, DEFAULT_TYPE
+from game.utils.constants import BG, FONT_STYLE, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, SPACE_SOUND, TITLE, FPS, DEFAULT_TYPE
 from game.components.spaceship import SpaceShip
 
 class Game:
     def __init__(self):
         pygame.init()
+        pygame.mixer.init()
         pygame.display.set_caption(TITLE)
         pygame.display.set_icon(ICON)
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -19,17 +23,20 @@ class Game:
         self.game_speed = 10
         self.x_pos_bg = 0
         self.y_pos_bg = 0
-        self.player = SpaceShip()
-        self.enemy_manager = EnemyManager()
+        self.player = SpaceShip()   
+        self.enemy_manager = EnemyManagers()     
         self.bullet_manager = BulletManager()
         self.running = False
         self.menu = Menu('Press any key to start...', self.screen)
         self.death_count = 0
         self.score = 0
+        self.hearts_total = 4
         self.highest_score = 0
         self.power_up_manager = PowerUpManager()
+        self.sounds_game = SoundsManager()
+        self.hearts = Hearts()
 
-    def execute(self):
+    def execute(self):        
         self.running = True
         while self.running:
             if not self.playing:
@@ -38,20 +45,24 @@ class Game:
         pygame.quit()      
 
     def run(self):
-        # Game loop: events - update - draw
+        # Game loop: events - update - draw        
+        self.sounds_game.space_sound_play()       
         self.score = 0
+        self.hearts_total = 4
         self.enemy_manager.reset()
-        self.bullet_manager.reset_bullet()
+        self.bullet_manager.reset_bullet()        
         self.playing = True                               
-        while self.playing:
+        while self.playing:            
             self.events()
             self.update()
-            self.draw()        
+            self.draw()
+        self.sounds_game.space_sound_stop()
         
     def events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.playing = False
+                self.running = False                
 
     def update(self):
         user_input = pygame.key.get_pressed()
@@ -59,17 +70,19 @@ class Game:
         self.enemy_manager.update(self)
         self.bullet_manager.update(self)
         self.power_up_manager.update(self)
+        self.hearts.update(self)
 
     def draw(self):
         self.clock.tick(FPS)
         self.screen.fill((255, 255, 255))
-        self.draw_background()
-        self.player.draw(self.screen)
+        self.draw_background()       
+        self.player.draw(self.screen)        
         self.enemy_manager.draw(self.screen)
-        self.bullet_manager.draw(self.screen)
-        self.draw_score()
-        self.power_up_manager.draw(self.screen)
+        self.bullet_manager.draw(self.screen)        
         self.draw_power_up_time()
+        self.power_up_manager.draw(self.screen)
+        self.hearts.draw_heart(self.screen) 
+        self.draw_score()
         pygame.display.update()
         #pygame.display.flip()
 
@@ -101,7 +114,7 @@ class Game:
         self.menu.update(self)
     
     def update_score(self):
-        self.score += 10        
+        self.score += 10
     
     def update_highest_score(self):
         if (self.score > self.highest_score):
@@ -115,7 +128,7 @@ class Game:
         self.screen.blit(text, text_rect)
 
     def draw_power_up_time(self):
-        if self.player.has_power_up:
+        if self.player.has_power_up == True and self.player.power_up_type != DEFAULT_TYPE:
             time_to_show = round((self.player.power_time_up - pygame.time.get_ticks()) /1000, 2)
             if time_to_show >= 0:
                 message = f'{self.player.power_up_type.capitalize()} is enable for {time_to_show} second'

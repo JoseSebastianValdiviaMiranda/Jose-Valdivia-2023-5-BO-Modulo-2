@@ -10,7 +10,7 @@ class PowerUps(Sprite):
         self.rect.y = 0
         self.rect.x = random.randint(120, SCREEN_WIDTH - 120)
         self.type = type
-        self.strat_time = 0
+        self.start_time = 0
 
     def update(self, game_speed):
         self.rect.y += game_speed

@@ -1,5 +1,5 @@
-import random
 import pygame
+import random
 
 from pygame.sprite import Sprite
 from game.components.bullets.bullet import Bullet
@@ -26,9 +26,10 @@ class Enemy(Sprite):
         self.move_x_for = random.randint(move_x_for[0], move_x_for[1])
         self.index = 0
         self.type = "enemy"
-        self.shooting_time = random.randint(30, 50)
+        self.shooting_time = random.randint(30, 50)        
+        print("hola")
         
-    def update(self, game):
+    def update(self, game):               
         self.rect.y += self.speed_y
         self.shoot(game.bullet_manager)
         if self.movement_x == 'left':

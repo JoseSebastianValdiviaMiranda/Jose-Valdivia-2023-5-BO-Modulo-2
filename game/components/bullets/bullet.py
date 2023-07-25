@@ -6,10 +6,11 @@ from game.utils.constants import BULLET, BULLET_ENEMY
 class Bullet(Sprite):
     BULLET_WIDTH = 10
     BULLET_HEIGHT = 20
-    BULLET_PLAYER = pygame.transform.scale(BULLET, (BULLET_WIDTH, BULLET_HEIGHT))
+    BULLET_PLAYER = pygame.transform.scale(BULLET, (BULLET_WIDTH + 10, BULLET_HEIGHT))
     BULLET_ENEMY = pygame.transform.scale(BULLET_ENEMY, (BULLET_WIDTH, BULLET_HEIGHT))
     BULLETS = {'player': BULLET_PLAYER, 'enemy': BULLET_ENEMY}
-    SPEED = 20
+    SPEED_ENEMY = 20
+    SPEED_PLAYER = 20
 
     def __init__(self, spaceship):        
         self.image = self.BULLETS[spaceship.type]        
@@ -19,9 +20,9 @@ class Bullet(Sprite):
 
     def update(self):
         if self.owner == 'player':
-            self.rect.y -= self.SPEED
+            self.rect.y -= self.SPEED_PLAYER
         else:
-            self.rect.y += self.SPEED
+            self.rect.y += self.SPEED_ENEMY
 
     def draw(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y)) 
